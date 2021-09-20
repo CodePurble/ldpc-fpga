@@ -30,7 +30,7 @@ end
 initial
 begin: info
     integer i;
-    for(i = 0; i < K; i+=1) begin
+    for(i = 0; i < K; i=i+1) begin
         generator_p = {generator_p, pmat_mem[i]};
     end
     $display("gen:%b", generator_p);

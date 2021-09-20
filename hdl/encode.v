@@ -28,9 +28,9 @@ begin
             end
         end */
         integer i, j;
-        for(i = 0; i < N-K; i+=1) begin
+        for(i = 0; i < N-K; i=i+1) begin
             check_bits[i] = 0;
-            for(j = 0; j < K; j+=1) begin
+            for(j = 0; j < K; j=j+1) begin
                 check_bits[i] = check_bits[i] ^ (info_bits[j] & generator_p[j*(N-K) + i]);
                 /* $display("%b", generator_p[j*(N-K) + i]); */
             end
