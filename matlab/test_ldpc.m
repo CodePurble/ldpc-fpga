@@ -41,6 +41,10 @@ H = [
 ];
 %}
 
+% N = 20;
+% K = 5;
+% M = N - K;
+% Z = 5;
 function [cols_with_ones, rows_with_ones, row_weight_vec, col_weight_vec] = efficient_pcm(N, M, H)
     col_weight_vec = sum(H, 1);
     row_weight_vec = sum(H, 2);

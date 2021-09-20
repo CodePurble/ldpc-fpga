@@ -5,14 +5,45 @@ void swap_rows(int s_rows, int s_cols, int r1, int r2, int *arr);
 void swap_cols(int s_rows, int s_cols, int c1, int c2, int *arr);
 void print_mat(int rows, int cols, int *mat);
 void read_mat(const char* fname, int r, int c, int *dest);
+int* get_cols_with_ones(int rows, int cols, int *mat, int wr);
 
 int main()
 {
     const int N = 11;
     const int K = 6;
-    int *h_mat = calloc((N-K)*N, sizeof(int));
-    read_mat("h2.txt", N-K, N, h_mat);
+    const int M = N - K;
+    const int wc = 2;
+    const int wr = 3;
+    int *h_mat = calloc(M*N, sizeof(int));
+    read_mat("h2.txt", M, N, h_mat);
+    int *cols_with_ones = get_cols_with_ones(M, N, h_mat, wr);
+    for(int i = 0; i < M; i++) {
+        for(int j = 0; j < wr; j++) {
+            if(cols_with_ones[i*wr + j]) {
+            }
+        }
+    }
+
+
+    free(cols_with_ones);
+    free(h_mat);
     return 0;
+}
+
+int* get_cols_with_ones(int rows, int cols, int *mat, int wr)
+{
+    int *cols_with_ones = calloc(rows*wr, sizeof(int));
+    int ind;
+    for(int i = 0; i < rows; i++) {
+        ind = 0;
+        for(int j = 0; j < cols; j++) {
+            if(mat[i*cols + j] == 1) {
+                cols_with_ones[i*wr + ind] = j;
+                ind++;
+            }
+        }
+    }
+    return cols_with_ones;
 }
 
 void read_mat(const char* fname, int r, int c, int *dest)
@@ -37,12 +68,13 @@ void print_mat(int rows, int cols, int *mat)
 {
     for(int i = 0; i < rows; i++) {
         for(int j = 0; j < cols; j++) {
-            printf("%2d", mat[i*cols + j]);
+            printf("%3d", mat[i*cols + j]);
         }
         printf("\n");
     }
     printf("\n");
 }
+
 void swap_rows(int s_rows, int s_cols, int r1, int r2, int *arr)
 {
     if(r1 > s_rows || r2 > s_rows) {
