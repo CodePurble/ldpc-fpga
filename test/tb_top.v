@@ -4,7 +4,8 @@ parameter N = 11;
 parameter K = 6;
 reg enc_i_en, clk;
 reg [K-1:0] info_bits;
-reg [((K)*(N-K))-1:0] generator_p;
+/* reg [((K)*(N-K))-1:0] generator_p; */
+reg [(K*N)-1:0] generator_p;
 wire [N-1:0] codeword;
 
 encode #(.N(N), .K(K)) enc(
@@ -15,7 +16,8 @@ encode #(.N(N), .K(K)) enc(
     .i_en(enc_i_en)
 );
 
-reg [N-K-1:0] pmat_mem [0:K-1];
+/* reg [N-K-1:0] pmat_mem [0:K-1]; */
+reg [N-1:0] pmat_mem [0:K-1];
 
 initial
 begin
@@ -24,7 +26,7 @@ begin
 
     $dumpfile("../sim/tb_top.vcd");
     $dumpvars(0, tb_top);
-    $readmemb("./mats.list", pmat_mem);
+    $readmemb("../g1.list", pmat_mem);
 end
 
 initial
@@ -32,6 +34,7 @@ begin: info
     integer i;
     for(i = 0; i < K; i=i+1) begin
         generator_p = {generator_p, pmat_mem[i]};
+        $display("pmati:%b", pmat_mem[i]);
     end
     $display("gen:%b", generator_p);
     info_bits = 6'b111111;
