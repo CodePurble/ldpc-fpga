@@ -9,15 +9,15 @@ int* get_cols_with_ones(int rows, int cols, int *mat, int wr);
 
 int main()
 {
-    const int N = 11;
-    const int K = 6;
-    const int M = N - K;
+    const int n = 11;
+    const int k = 6;
+    const int m = n - k;
     const int wc = 2;
     const int wr = 3;
-    int *h_mat = calloc(M*N, sizeof(int));
-    read_mat("h2.txt", M, N, h_mat);
-    int *cols_with_ones = get_cols_with_ones(M, N, h_mat, wr);
-    for(int i = 0; i < M; i++) {
+    int *h_mat = calloc(m*n, sizeof(int));
+    read_mat("h2.txt", m, n, h_mat);
+    int *cols_with_ones = get_cols_with_ones(m, n, h_mat, wr);
+    for(int i = 0; i < m; i++) {
         for(int j = 0; j < wr; j++) {
             if(cols_with_ones[i*wr + j]) {
             }
