@@ -2,6 +2,8 @@
 
 ## LDPC codes from communication standards
 
+**NOTE: The dimensions of H in ALL CASES are `(n-k) x n`**
+
 ### DOCSIS 3.1 (Data Over Cable Service Interface Specification)
 
 | `n`           | `k`   | `m = n - k` | Code rate `R = k/n` |
@@ -38,8 +40,17 @@
 |      | 1728 | 576         | 0.75                |
 |      | 1920 | 384         | 0.83                |
 
+### 5G-NR
+
+| `n`    | `k`  | `m = n - k` | Code rate `R = k/n` |
+|--------|------|-------------|---------------------|
+| 26,112 | 8448 | 17,664      | 0.323               |
+
+
 > [REF] Mahmudul Hasan, "LDPC Codes from Communication Standards," webdemo,
 > Institute of Telecommunications, University of Stuttgart, Germany, Sep. 2021.
 > [Online] Available: http://webdemo.inue.uni-stuttgart.de
 >
 > Bibtex entry: `ldpcwebdemo`
+>
+> 5G-NR https://github.com/xiaoshaoning/5g-ldpc/blob/master/H.mat
