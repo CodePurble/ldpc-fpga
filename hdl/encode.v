@@ -1,31 +1,19 @@
 module encode(
     info_bits,
-    generator,
-    codeword,
-    clk,
-    i_en
+    generator_col,
+    code_bit
 );
 
-parameter N = 6;
 parameter K = 3;
 
-input clk, i_en;
 input [K-1:0] info_bits;
-input [(K*N)-1:0] generator;
-output reg [N-1:0] codeword;
+input [K-1:0] generator_col;
+output code_bit;
 
-always @(posedge clk)
-begin
-    if(i_en)
-    begin: gen
-        integer i, j;
-        for(i = 0; i < N; i=i+1) begin
-            codeword[i] = 0;
-            for(j = 0; j < K; j=j+1) begin
-                codeword[i] = codeword[i] ^ (info_bits[j] & generator[j*N + i]);
-            end
-        end
-    end
-end
+wire [K-1:0] w;
+
+assign w = info_bits & generator_col;
+assign code_bit = ^w;
+
 endmodule
 

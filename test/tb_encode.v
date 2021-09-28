@@ -2,37 +2,34 @@ module tb_encode;
 parameter N = 11;
 parameter K = 6;
 
-reg clk, i_en;
 reg [K-1:0] info_bits;
-/* reg [((K)*(N-K))-1:0] generator; */
-reg [(K*N)-1:0] generator;
-wire [N-1:0] codeword;
+reg [K-1:0] generator_col;
+wire code_bit;
 
-encode #(.N(N), .K(K)) uut(
+encode #(.K(K)) uut(
     .info_bits(info_bits),
-    .generator(generator),
-    .codeword(codeword),
-    .clk(clk),
-    .i_en(i_en)
+    .generator_col(generator_col),
+    .code_bit(code_bit)
 );
 
-initial clk = 1'b1;
-always #10 clk = ~clk;
-
 initial
-begin
+begin: foo
+    integer i;
     $dumpfile("../sim/tb_encode_dump.vcd");
     $dumpvars(0, tb_encode);
-    generator = 66'b100000101000100001001000100010001000100011000000100101000000101001;
-    /* generator = 30'b101001001010001011000101001001; */
-    i_en = 1;
     info_bits = 6'b111111;
-    #30 $finish;
+    for(i = 0; i < K; i = i + 1) begin
+        generator_col = i;
+        #10;
+        $display("info=%b, generator_col=%b, code_bit=%b",
+            info_bits, generator_col, code_bit);
+    end
 end
 
-initial
+/* initial
 begin
-    $monitor("info=%b, code=%b", info_bits, codeword);
-end
+    $monitor("info=%b, generator_col=%b, code_bit=%b",
+        info_bits, generator_col, code_bit);
+end */
 endmodule
 
