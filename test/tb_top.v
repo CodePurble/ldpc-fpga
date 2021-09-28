@@ -7,7 +7,7 @@ reg [K-1:0] info_bits;
 reg [(K*N)-1:0] generator;
 wire [N-1:0] codeword;
 
-encode #(.N(N), .K(K)) enc(
+top #(.N(N), .K(K)) uut(
     .info_bits(info_bits),
     .generator(generator),
     .codeword(codeword),
