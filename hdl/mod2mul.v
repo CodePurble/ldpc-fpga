@@ -1,4 +1,4 @@
-module encode(
+module mod2mul(
     info_bits,
     generator_col,
     code_bit
