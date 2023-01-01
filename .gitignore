@@ -2,3 +2,4 @@
 *.out
 sim/
 matlab/H_5gnr_ldpc.csv
+build/
