@@ -1,0 +1,117 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{/home/ramprakash/Documents/notes/bib/hw.bib}
+\addbibresource{/home/ramprakash/Documents/notes/bib/comm.bib}
+
+\usepackage{fontspec} % Set font families
+%\setmainfont{}
+%\setsansfont{}
+\setmonofont{UbuntuMono Nerd Font Mono}
+
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\usepackage{tocloft} % toc, lof, lot, lol on same page by default
+\usepackage{siunitx} % units
+\usepackage{graphicx} % Images
+\usepackage{xcolor} % Colours
+\usepackage{caption} % caption floats
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage[newfloat,outputdir=build]{minted} % source code blocks
+\usemintedstyle[c]{bw}
+\definecolor{codebg}{rgb}{0.9, 0.9, 0.9}
+
+\usepackage{hyperref} % link crossrefs and toc
+\hypersetup{
+    colorlinks=true,
+    linkcolor=cyan,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+\begin{document}
+
+\title{Mini Internship Progress Report-I}
+\author{C. Ramprakash (4NI18EC019)}
+\date{\today}
+\maketitle
+
+\section{Problem statement}
+The aim of this project is to implement a high performance Low Density
+Parity Check (LDPC) \cite{gallager1962} encoder (essentially a modulo-2 matrix
+multiplier) on an FPGA. The initial motivation to take up this project came
+from a Software Defined Radio (SDR) implementation on an FPGA \cite{lpsdr_isc}
+that utilised LDPC codes. What makes LDPC codes desirable is the ability for
+them to operate very close to channel capacity. LDPC codes or it's variants
+have been adopted for various standards such as DOCSIS 3.1, 5G-NR, IEEE 802.11n (WiFi) and
+IEEE 802.16 (WiMax) \cite{ldpcwebdemo}.
+
+\section{Introduction}
+Any error-correcting code assumes four basic tools: the generator matrix
+($\boldsymbol{G}$), message vector
+($\boldsymbol{d}$), code vector
+($\boldsymbol{c}$) and parity-check matrix
+($\boldsymbol{H}$), all of which are binary matrices. For
+LDPC codes, \begin{math}\boldsymbol{H}\end{math} is a binary matrix where zeros
+greatly outnumber the ones. The code itself is defined by two parameters: the
+number of bits in the coded word ($n$), and the number of message bits ($k$).\\
+The encoding of a message is done as follows:
+
+\begin{equation}\label{eq:coding}
+    \boldsymbol{c}_{1 \times n} = \boldsymbol{d}_{1 \times k}\boldsymbol{G}_{k \times n}
+\end{equation}
+Where:
+\begin{equation}\label{eq:generator}
+    \boldsymbol{G} = \left[\begin{array}{c|c}\boldsymbol{I_{k}}&\boldsymbol{P}\end{array}\right]
+\end{equation}
+\begin{equation}\label{eq:pcheck}
+    \boldsymbol{H} = \left[\begin{array}{c|c}\boldsymbol{P^T}&\boldsymbol{I_{n-k}}\end{array}\right]
+\end{equation}
+
+It is equation \ref{eq:coding} that is to be implemented on an FPGA.
+
+\section{Progress}
+
+\subsection{Iteration 1}
+The initial implementation was a brute-force, naive approach to the
+implementation. The algorithm used was a simple bit-by-bit iteration.
+Naturally, this approach fails when $n$ or $k$ increase. The code for this
+iteration can be found
+\href{https://github.com/CodePurble/ldpc-fpga/blob/main/hdl/encode.v}{here}.
+
+This iteration failed to synthesize when tested for $n = 2304$ and $k = 1536$
+as vector sizes were too large, as whole matrices were loaded at once for
+processing.
+
+\subsection{Iteration 2}
+This iteration dealt with the previous problems by computing the code word a
+single bit at a time, only operating on a single column of $\boldsymbol{G}$ at
+a time. For the same dimensions as before, this design could be synthesized.
+This iteration failed at the implementation stage due to resource
+over-utilisation. The bottleneck here being the I/O (which was over-utilised by
+~3000\%!). This implementation can be found
+\href{https://github.com/CodePurble/ldpc-fpga/commit/9727b4bf16ffcc5572a6b557ddc749873093d5c3}{here}.
+
+\subsection{Iteration 3}
+To address the above problems, the decision to buffer the I/O was taken, that
+ingests and outputs the data in smaller chunks and bring down I/O utilisation.
+This iteration is currently still being implemented. Standalone buffers have
+been implemented (see
+\href{https://github.com/CodePurble/ldpc-fpga/tree/re-arch#readme}{here}). They
+are yet to be integrated into the overall design. I should be able to complete
+this design in the coming week.
+
+\subsection{Iteration 4 (Planned)}
+Optimise the above design further, and reduce area and power footprint,
+possibly by replacing inferred memories with Xilinx IP cores for BRAM. Possibly
+even make the design a plug-and-play testing environment for other multiplier
+implementations.
+
+\printbibliography
+
+\end{document}
+
